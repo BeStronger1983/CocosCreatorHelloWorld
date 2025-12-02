@@ -1,6 +1,8 @@
 import { _decorator, Component, Node, Vec3, input, Input, EventMouse } from 'cc';
 const { ccclass, property } = _decorator;
 
+export const BLOCK_SIZE = 40; // 添加一个放大比
+
 @ccclass('PlayerController')
 export class PlayerController extends Component {
     private _startJump: boolean = false;
@@ -46,12 +48,12 @@ export class PlayerController extends Component {
         if (this._startJump) {
             return;
         }
-        this._startJump = true;  // 标记开始跳跃
-        this._jumpStep = step; // 跳跃的步数 1 或者 2
-        this._curJumpTime = 0; // 重置开始跳跃的时间
-        this._curJumpSpeed = this._jumpStep / this._jumpTime; // 根据时间计算出速度
-        this.node.getPosition(this._curPos); // 获取角色当前的位置
-        Vec3.add(this._targetPos, this._curPos, new Vec3(this._jumpStep, 0, 0));    // 计算出目标位置
+        this._startJump = true;
+        this._jumpStep = step;
+        this._curJumpTime = 0;
+        this._curJumpSpeed = this._jumpStep * BLOCK_SIZE/ this._jumpTime;
+        this.node.getPosition(this._curPos);
+        Vec3.add(this._targetPos, this._curPos, new Vec3(this._jumpStep* BLOCK_SIZE, 0, 0));    
     }
 }
 
