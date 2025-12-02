@@ -54,9 +54,14 @@ export class PlayerController extends Component {
         this._startJump = true;
         this._jumpStep = step;
         this._curJumpTime = 0;
+
+        const clipName = step == 1 ? 'oneStep' : 'twoStep';
+        const state = this.BodyAnim.getState(clipName);
+        this._jumpTime = state.duration;
+
         this._curJumpSpeed = this._jumpStep * BLOCK_SIZE/ this._jumpTime;
         this.node.getPosition(this._curPos);
-        Vec3.add(this._targetPos, this._curPos, new Vec3(this._jumpStep* BLOCK_SIZE, 0, 0));
+        Vec3.add(this._targetPos, this._curPos, new Vec3(this._jumpStep* BLOCK_SIZE, 0, 0));  
         
         if (this.BodyAnim) {
             if (step === 1) {
