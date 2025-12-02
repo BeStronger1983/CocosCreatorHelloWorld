@@ -29,8 +29,9 @@ export class GameManager extends Component {
     @property({type: Label}) 
     public stepsLabel: Label|null = null; // 计步器
 
-    start(){
+    start() {
         this.setCurState(GameState.GS_INIT);
+        this.playerCtrl?.node.on('JumpEnd', this.onPlayerJumpEnd, this);
     }
 
     init() {
@@ -117,5 +118,22 @@ export class GameManager extends Component {
 
     onStartButtonClicked() {    
         this.setCurState(GameState.GS_PLAYING);
+    }
+
+    onPlayerJumpEnd(moveIndex: number) {
+        if (this.stepsLabel) {
+            this.stepsLabel.string = '' + (moveIndex >= this.roadLength ? this.roadLength : moveIndex);
+        }
+        this.checkResult(moveIndex);
+    }
+
+    checkResult(moveIndex: number) {
+        if (moveIndex < this.roadLength) {
+            if (this._road[moveIndex] == BlockType.BT_NONE) { //跳到了空方块上
+                this.setCurState(GameState.GS_INIT)
+            }
+        } else { // 跳过了最大长度            
+            this.setCurState(GameState.GS_INIT);
+        }
     }
 }

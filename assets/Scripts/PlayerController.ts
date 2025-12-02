@@ -13,6 +13,7 @@ export class PlayerController extends Component {
     private _curPos: Vec3 = new Vec3();
     private _deltaPos: Vec3 = new Vec3(0, 0, 0);
     private _targetPos: Vec3 = new Vec3();
+    private _curMoveIndex: number = 0;
 
     @property(Animation)
     BodyAnim: Animation = null;
@@ -21,19 +22,20 @@ export class PlayerController extends Component {
 
     }
 
-    update(deltaTime: number) {
+    update (deltaTime: number) {
         if (this._startJump) {
-            this._curJumpTime += deltaTime; // 累计总的跳跃时间
-            if (this._curJumpTime > this._jumpTime) { // 当跳跃时间是否结束
-                // end 
-                this.node.setPosition(this._targetPos); // 强制位置到终点
-                this._startJump = false;               // 清理跳跃标记
+            this._curJumpTime += deltaTime;
+            if (this._curJumpTime > this._jumpTime) {
+                // end
+                this.node.setPosition(this._targetPos);
+                this._startJump = false;      
+                this.onOnceJumpEnd();        
             } else {
                 // tween
-                this.node.getPosition(this._curPos); 
-                this._deltaPos.x = this._curJumpSpeed * deltaTime; //每一帧根据速度和时间计算位移
-                Vec3.add(this._curPos, this._curPos, this._deltaPos); // 应用这个位移
-                this.node.setPosition(this._curPos); // 将位移设置给角色
+                this.node.getPosition(this._curPos);
+                this._deltaPos.x = this._curJumpSpeed * deltaTime;
+                Vec3.add(this._curPos, this._curPos, this._deltaPos);
+                this.node.setPosition(this._curPos);
             }
         }
     }
@@ -70,6 +72,8 @@ export class PlayerController extends Component {
                 this.BodyAnim.play('twoStep');
             }
         }
+
+        this._curMoveIndex += step;
     }
 
     setInputActive(active: boolean) {
@@ -81,7 +85,13 @@ export class PlayerController extends Component {
     }
 
     reset(){
+        this._curMoveIndex = 0;
+        this.node.getPosition(this._curPos);
+        this._targetPos.set(0,0,0);
+    }
 
+    onOnceJumpEnd() {
+        this.node.emit('JumpEnd', this._curMoveIndex);
     }
 }
 
