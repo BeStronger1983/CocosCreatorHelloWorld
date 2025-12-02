@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, Vec3, input, Input, EventMouse } from 'cc';
+import { _decorator, Component, Node, Vec3, input, Input, EventMouse, Animation } from 'cc';
 const { ccclass, property } = _decorator;
 
 export const BLOCK_SIZE = 40; // 添加一个放大比
@@ -13,6 +13,9 @@ export class PlayerController extends Component {
     private _curPos: Vec3 = new Vec3();
     private _deltaPos: Vec3 = new Vec3(0, 0, 0);
     private _targetPos: Vec3 = new Vec3();
+
+    @property(Animation)
+    BodyAnim: Animation = null;
 
     start() {
         input.on(Input.EventType.MOUSE_UP, this.onMouseUp, this);
@@ -53,7 +56,15 @@ export class PlayerController extends Component {
         this._curJumpTime = 0;
         this._curJumpSpeed = this._jumpStep * BLOCK_SIZE/ this._jumpTime;
         this.node.getPosition(this._curPos);
-        Vec3.add(this._targetPos, this._curPos, new Vec3(this._jumpStep* BLOCK_SIZE, 0, 0));    
+        Vec3.add(this._targetPos, this._curPos, new Vec3(this._jumpStep* BLOCK_SIZE, 0, 0));
+        
+        if (this.BodyAnim) {
+            if (step === 1) {
+                this.BodyAnim.play('oneStep');
+            } else if (step === 2) {
+                this.BodyAnim.play('twoStep');
+            }
+        }
     }
 }
 
