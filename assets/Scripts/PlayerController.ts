@@ -18,7 +18,7 @@ export class PlayerController extends Component {
     BodyAnim: Animation = null;
 
     start() {
-        input.on(Input.EventType.MOUSE_UP, this.onMouseUp, this);
+
     }
 
     update(deltaTime: number) {
@@ -70,6 +70,18 @@ export class PlayerController extends Component {
                 this.BodyAnim.play('twoStep');
             }
         }
+    }
+
+    setInputActive(active: boolean) {
+        if (active) {
+            input.on(Input.EventType.MOUSE_UP, this.onMouseUp, this);
+        } else {
+            input.off(Input.EventType.MOUSE_UP, this.onMouseUp, this);
+        }
+    }
+
+    reset(){
+
     }
 }
 
