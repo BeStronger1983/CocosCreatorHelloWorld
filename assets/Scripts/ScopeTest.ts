@@ -14,14 +14,14 @@ export class ScopeTest extends Component {
     }
 
     varTest(){
-        console.log(x);
+        console.log(x); // 輸出: undefined (變數提升，但未賦值)
 
         if(true){
             var x = 10;
-            console.log(x);
+            console.log(x); // 輸出: 10
         }
 
-        console.log(x);
+        console.log(x); // 輸出: 10 (x 在整個函式作用域中有效)
 
         // 在 for 迴圈中
         for (var j = 0; j < 3; j++) {
@@ -31,7 +31,7 @@ export class ScopeTest extends Component {
     }
 
     letTest(){
-        // console.log(x);
+        // console.log(x); // 會報錯，因為 x 在此作用域中未定義
         
         if(true){
             let x = 10;
